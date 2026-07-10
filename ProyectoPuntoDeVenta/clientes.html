@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - AutoParts POS</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Estilos compartidos de la tabla (iguales a inventario) */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #1a252f;
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            background: var(--surface);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #fbfcfd;
+        }
+
+        .action-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .action-links a:hover {
+            opacity: 0.7;
+        }
+        
+        .badge {
+            background: #eef2f7;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">⚙️ AutoParts POS</div>
+        <ul class="nav-menu">
+            <a href="index.html" class="nav-item">📊 Dashboard</a>
+            <a href="pos.html" class="nav-item">🛒 Terminal de Ventas</a>
+            <a href="inventario.html" class="nav-item">📦 Inventario</a>
+            <a href="clientes.html" class="nav-item active">👥 Clientes</a>
+            <a href="reportes.html" class="nav-item">📈 Reportes</a>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Directorio de Clientes</h2>
+            <button class="btn-primary">+ Registrar Cliente</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Localidad</th>
+                        <th>Vehículo Principal</th>
+                        <th>Total Comprado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Carlos Rodríguez</strong></td>
+                        <td>(809) 555-0123</td>
+                        <td>Bajos de Haina</td>
+                        <td><span class="badge">Toyota Hilux 2018</span></td>
+                        <td>RD$ 85,400</td>
+                        <td class="action-links">
+                            <a href="#">Ver Perfil</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>María Fernández</strong></td>
+                        <td>(829) 555-0456</td>
+                        <td>San Cristóbal</td>
+                        <td><span class="badge">Honda CR-V 2021</span></td>
+                        <td>RD$ 12,500</td>
+                        <td class="action-links">
+                            <a href="#">Ver Perfil</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>José Pérez</strong></td>
+                        <td>(849) 555-7890</td>
+                        <td>Santo Domingo</td>
+                        <td><span class="badge">Nissan Frontier 2015</span></td>
+                        <td>RD$ 45,000</td>
+                        <td class="action-links">
+                            <a href="#">Ver Perfil</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
