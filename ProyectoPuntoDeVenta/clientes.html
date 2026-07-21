@@ -5,20 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes - AutoParts POS</title>
     <link rel="stylesheet" href="styles.css">
-    
+
     <style>
-        /* Estilos compartidos de la tabla (iguales a inventario) */
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         .page-header h2 {
             margin: 0;
             color: var(--primary);
             font-size: 1.6rem;
+        }
+
+        .client-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .client-form input {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
         }
 
         .btn-primary {
@@ -79,18 +98,6 @@
             background-color: #fbfcfd;
         }
 
-        .action-links a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: opacity 0.2s;
-        }
-
-        .action-links a:hover {
-            opacity: 0.7;
-        }
-        
         .badge {
             background: #eef2f7;
             padding: 4px 8px;
@@ -105,7 +112,7 @@
     <aside class="sidebar">
         <div class="brand">⚙️ AutoParts POS</div>
         <ul class="nav-menu">
-            <a href="index.html" class="nav-item">📊 Dashboard</a>
+            <a href="../index.html" class="nav-item">📊 Dashboard</a>
             <a href="pos.html" class="nav-item">🛒 Terminal de Ventas</a>
             <a href="inventario.html" class="nav-item">📦 Inventario</a>
             <a href="clientes.html" class="nav-item active">👥 Clientes</a>
@@ -116,8 +123,17 @@
     <main class="main-content">
         <div class="page-header">
             <h2>Directorio de Clientes</h2>
-            <button class="btn-primary">+ Registrar Cliente</button>
+            <button class="btn-primary" type="button" onclick="document.getElementById('nombre').focus()">+ Registrar Cliente</button>
         </div>
+
+        <form class="client-form" id="client-form">
+            <input id="nombre" name="nombre" placeholder="Nombre" required>
+            <input id="telefono" name="telefono" placeholder="Teléfono" required>
+            <input id="localidad" name="localidad" placeholder="Localidad" required>
+            <input id="vehiculo" name="vehiculo" placeholder="Vehículo principal" required>
+            <input id="totalComprado" name="totalComprado" placeholder="Total comprado" type="number" min="0" required>
+            <button class="btn-primary" type="submit">Guardar Cliente</button>
+        </form>
 
         <div class="table-container">
             <table>
@@ -128,43 +144,14 @@
                         <th>Localidad</th>
                         <th>Vehículo Principal</th>
                         <th>Total Comprado</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Carlos Rodríguez</strong></td>
-                        <td>(809) 555-0123</td>
-                        <td>Bajos de Haina</td>
-                        <td><span class="badge">Toyota Hilux 2018</span></td>
-                        <td>RD$ 85,400</td>
-                        <td class="action-links">
-                            <a href="#">Ver Perfil</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>María Fernández</strong></td>
-                        <td>(829) 555-0456</td>
-                        <td>San Cristóbal</td>
-                        <td><span class="badge">Honda CR-V 2021</span></td>
-                        <td>RD$ 12,500</td>
-                        <td class="action-links">
-                            <a href="#">Ver Perfil</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>José Pérez</strong></td>
-                        <td>(849) 555-7890</td>
-                        <td>Santo Domingo</td>
-                        <td><span class="badge">Nissan Frontier 2015</span></td>
-                        <td>RD$ 45,000</td>
-                        <td class="action-links">
-                            <a href="#">Ver Perfil</a>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="clientes-table-body"></tbody>
             </table>
         </div>
     </main>
+
+    <script src="db.js"></script>
+    <script src="clientes.js"></script>
 </body>
 </html>

@@ -4,62 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario - AutoParts POS</title>
-    <style>
-        /* Aquí va el mismo CSS del Dashboard para mantener el diseño base */
-        /* ... (pega aquí tu root, body, sidebar y main-content) ... */
-        
-        /* Estilos específicos para Tablas */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .table-container {
-            background: var(--surface);
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 15px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            background: #f8fafc;
-            color: var(--muted);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .action-links a {
-            color: var(--primary);
-            text-decoration: none;
-            margin-right: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .action-links a.delete { color: var(--accent); }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <aside class="sidebar">
         <div class="brand">⚙️ AutoParts POS</div>
         <ul class="nav-menu">
-            <a href="index.html" class="nav-item">📊 Dashboard</a>
+            <a href="../index.html" class="nav-item">📊 Dashboard</a>
             <a href="pos.html" class="nav-item">🛒 Terminal de Ventas</a>
             <a href="inventario.html" class="nav-item active">📦 Inventario</a>
             <a href="clientes.html" class="nav-item">👥 Clientes</a>
@@ -85,35 +36,12 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>SUSP-4X4-01</td>
-                        <td>Kit de Suspensión 4x4 (2")</td>
-                        <td>45,000</td>
-                        <td>10</td>
-                        <td style="color: #27ae60; font-weight: bold;">En Stock</td>
-                        <td class="action-links">
-                            <a href="#">Editar</a>
-                            <a href="#" class="delete">Eliminar</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>FIL-OIL-K5</td>
-                        <td>Filtro de Aceite Sintético</td>
-                        <td>850</td>
-                        <td>2</td>
-                        <td style="color: var(--accent); font-weight: bold;">Bajo</td>
-                        <td class="action-links">
-                            <a href="#">Editar</a>
-                            <a href="#" class="delete">Eliminar</a>
-                        </td>
-                    </tr>
-                <tbody id="tabla-inventario-body">
-                    </tbody>
+                <tbody id="tabla-inventario-body"></tbody>
             </table>
         </div>
     </main>
-    
+
+    <script src="db.js"></script>
     <script src="data.js"></script>
     <script src="inventario.js"></script>
 </body>

@@ -7,13 +7,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <main>
+    <aside class="sidebar">
+        <div class="brand">⚙️ AutoParts POS</div>
+        <ul class="nav-menu">
+            <a href="../index.html" class="nav-item">📊 Dashboard</a>
+            <a href="pos.html" class="nav-item active">🛒 Terminal de Ventas</a>
+            <a href="inventario.html" class="nav-item">📦 Inventario</a>
+            <a href="clientes.html" class="nav-item">👥 Clientes</a>
+            <a href="reportes.html" class="nav-item">📈 Reportes</a>
+        </ul>
+    </aside>
+
+    <main class="main-content pos-layout">
         <section class="products-section">
             <div class="header">
                 <h2>📦 Terminal de Ventas - Repuestos</h2>
             </div>
-            <div class="grid" id="product-grid">
-                </div>
+            <div class="grid" id="product-grid"></div>
         </section>
 
         <aside class="cart-section">
@@ -21,8 +31,7 @@
             <div class="cart-actions">
                 <button id="btn-clear" class="btn-clear">Vaciar</button>
             </div>
-            <div class="cart-items" id="cart-items">
-                </div>
+            <div class="cart-items" id="cart-items"></div>
             <div class="totals">
                 <div class="total-row">
                     <span>Total:</span>
@@ -30,10 +39,12 @@
                 </div>
                 <button id="btn-checkout" class="btn-checkout">Procesar Pago</button>
                 <div id="status-message" class="status-message"></div>
+                <div id="receipt-output" class="receipt-output" aria-live="polite"></div>
             </div>
         </aside>
     </main>
 
+    <script src="db.js"></script>
     <script defer src="script.js"></script>
 </body>
 </html>

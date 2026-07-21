@@ -1,14 +1,10 @@
-// inventario.js
 const tbody = document.getElementById('tabla-inventario-body');
 
-function renderTabla() {
-    const inventario = obtenerInventario();
-    tbody.innerHTML = ''; // Limpiamos la tabla
+async function renderTabla() {
+    const inventario = await window.AutoPartsDB.getInventory();
+    tbody.innerHTML = '';
 
     inventario.forEach(prod => {
-        const tr = document.createElement('tr');
-        
-        // Lógica de colores para el estado del stock
         let estadoHtml = '';
         if (prod.stock > 5) {
             estadoHtml = '<span style="color: #27ae60; font-weight: bold;">En Stock</span>';
@@ -18,6 +14,7 @@ function renderTabla() {
             estadoHtml = '<span style="color: var(--accent); font-weight: bold;">Agotado</span>';
         }
 
+        const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${prod.sku}</td>
             <td>${prod.nombre}</td>
@@ -33,5 +30,14 @@ function renderTabla() {
     });
 }
 
-// Inicializar
-renderTabla();
+async function inicializarInventario() {
+    await window.AutoPartsDB.initDatabase();
+    await renderTabla();
+    window.AutoPartsDB.subscribeToChanges((tipo) => {
+        if (tipo === 'inventory') {
+            renderTabla();
+        }
+    });
+}
+
+inicializarInventario();

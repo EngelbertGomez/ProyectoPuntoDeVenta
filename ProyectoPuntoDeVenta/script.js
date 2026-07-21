@@ -1,24 +1,57 @@
-const productos = [
-    { id: 1, sku: 'SUSP-4X4-01', nombre: 'Kit de Suspensión 4x4 (2")', precio: 45000, stock: 10 },
-    { id: 2, sku: 'TIRE-AT-285', nombre: 'Neumático Off-Road A/T 285/70R17', precio: 12500, stock: 10 },
-    { id: 3, sku: 'WNC-12K-00', nombre: 'Winche de 12,000 lbs', precio: 32000, stock: 10 },
-    { id: 4, sku: 'BRK-PAD-09', nombre: 'Pastillas de Freno (Cerámica)', precio: 2800, stock: 10 },
-    { id: 5, sku: 'FIL-OIL-K5', nombre: 'Filtro de Aceite Sintético', precio: 850, stock: 10 },
-    { id: 6, sku: 'LGT-LED-BAR', nombre: 'Barra LED 42 pulgadas', precio: 5400, stock: 10 },
-    { id: 7, sku: 'BATT-12V-75', nombre: 'Batería 12V 75Ah', precio: 6200, stock: 10 },
-    { id: 8, sku: 'SPK-PLG-IR', nombre: 'Bujías de Iridio (Set x4)', precio: 3100, stock: 10 },
-    { id: 9, sku: 'ALT-120A', nombre: 'Alternador 120A', precio: 8900, stock: 10 },
-    { id: 10, sku: 'RAD-ALU-01', nombre: 'Radiador de Aluminio', precio: 7500, stock: 10 }
-];
-
 const grid = document.getElementById('product-grid');
 const cartItems = document.getElementById('cart-items');
 const cartTotal = document.getElementById('cart-total');
 const statusMessage = document.getElementById('status-message');
+const receiptOutput = document.getElementById('receipt-output');
 const btnClear = document.getElementById('btn-clear');
 const btnCheckout = document.getElementById('btn-checkout');
 
+let productos = [];
 let carrito = [];
+
+function formatearMoneda(valor) {
+    return `RD$ ${valor.toLocaleString('es-DO')}`;
+}
+
+function generarFactura(items, total) {
+    const fecha = new Date().toLocaleString('es-DO');
+    const lineas = [
+        '=== AutoParts POS ===',
+        'Factura de venta',
+        `Fecha: ${fecha}`,
+        '-------------------',
+        ...items.map(item => `${item.cantidad}x ${item.nombre} - ${formatearMoneda(item.precio * item.cantidad)}`),
+        '-------------------',
+        `Total: ${formatearMoneda(total)}`
+    ];
+
+    return lineas.join('\n');
+}
+
+function mostrarFactura(items, total) {
+    if (!receiptOutput) return;
+
+    const textoFactura = generarFactura(items, total);
+    receiptOutput.innerHTML = '';
+
+    const titulo = document.createElement('div');
+    titulo.className = 'receipt-title';
+    titulo.textContent = 'Factura emitida';
+
+    const bloque = document.createElement('pre');
+    bloque.textContent = textoFactura;
+
+    receiptOutput.appendChild(titulo);
+    receiptOutput.appendChild(bloque);
+
+    console.log(textoFactura);
+
+    window.setTimeout(() => {
+        if (typeof window.print === 'function') {
+            window.print();
+        }
+    }, 150);
+}
 
 function renderProductos() {
     grid.innerHTML = '';
@@ -26,10 +59,9 @@ function renderProductos() {
     productos.forEach((producto) => {
         const card = document.createElement('div');
         card.className = 'card';
-        
-        // Determinar clase de stock
+
         const stockClass = producto.stock > 0 ? 'stock-ok' : 'stock-out';
-        
+
         card.innerHTML = `
             <span class="sku">${producto.sku}</span>
             <h3>${producto.nombre}</h3>
@@ -42,7 +74,6 @@ function renderProductos() {
         grid.appendChild(card);
     });
 
-    // Eventos a los botones de "Agregar"
     const addButtons = document.querySelectorAll('.add-btn');
     addButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -93,12 +124,23 @@ function renderCarrito() {
     cartTotal.textContent = `RD$ ${subtotal.toLocaleString('es-DO')}`;
 }
 
-function agregarAlCarrito(id) {
+async function cargarProductos() {
+    productos = await window.AutoPartsDB.getInventory();
+    renderProductos();
+    renderCarrito();
+}
+
+async function guardarProductos() {
+    await window.AutoPartsDB.saveInventory(productos);
+}
+
+async function agregarAlCarrito(id) {
     const productoOriginal = productos.find(p => p.id === id);
 
-    if (productoOriginal.stock <= 0) return;
+    if (!productoOriginal || productoOriginal.stock <= 0) return;
 
     productoOriginal.stock -= 1;
+    await guardarProductos();
 
     const existente = carrito.find((item) => item.id === id);
     if (existente) {
@@ -112,7 +154,7 @@ function agregarAlCarrito(id) {
     statusMessage.textContent = `${productoOriginal.nombre} agregado al carrito.`;
 }
 
-function cambiarCantidad(id, accion) {
+async function cambiarCantidad(id, accion) {
     const itemCarrito = carrito.find((producto) => producto.id === id);
     const productoOriginal = productos.find((p) => p.id === id);
 
@@ -135,11 +177,12 @@ function cambiarCantidad(id, accion) {
         carrito = carrito.filter((producto) => producto.id !== id);
     }
 
+    await guardarProductos();
     renderProductos();
     renderCarrito();
 }
 
-function limpiarCarrito() {
+async function limpiarCarrito() {
     carrito.forEach(item => {
         const prodOriginal = productos.find(p => p.id === item.id);
         if (prodOriginal) {
@@ -148,26 +191,30 @@ function limpiarCarrito() {
     });
 
     carrito = [];
+    await guardarProductos();
     renderProductos();
     renderCarrito();
     statusMessage.textContent = 'Carrito vaciado. Stock restaurado.';
 }
 
-function procesarPago() {
+async function procesarPago() {
     if (carrito.length === 0) {
         statusMessage.textContent = 'Agregue productos antes de procesar el pago.';
         return;
     }
 
+    const itemsProcesados = [...carrito];
     const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-    statusMessage.textContent = `Pago procesado por RD$ ${total.toLocaleString('es-DO')}.`;
-    
+
+    statusMessage.textContent = `Pago procesado por ${formatearMoneda(total)}. Factura lista para imprimir.`;
+    mostrarFactura(itemsProcesados, total);
+
     carrito = [];
     renderCarrito();
 }
 
-btnClear.addEventListener('click', limpiarCarrito);
-btnCheckout.addEventListener('click', procesarPago);
+btnClear.addEventListener('click', () => limpiarCarrito());
+btnCheckout.addEventListener('click', () => procesarPago());
 
 cartItems.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-action]');
@@ -182,16 +229,26 @@ cartItems.addEventListener('click', (event) => {
         if (item && prodOriginal) {
             prodOriginal.stock += item.cantidad;
         }
-        
+
         carrito = carrito.filter((item) => item.id !== id);
-        renderProductos();
-        renderCarrito();
-        statusMessage.textContent = 'Producto eliminado del carrito.';
+        guardarProductos().then(() => {
+            renderProductos();
+            renderCarrito();
+            statusMessage.textContent = 'Producto eliminado del carrito.';
+        });
     } else {
         cambiarCantidad(id, action);
     }
 });
 
-// Inicialización
-renderProductos();
-renderCarrito();
+async function inicializarPOS() {
+    await window.AutoPartsDB.initDatabase();
+    await cargarProductos();
+    window.AutoPartsDB.subscribeToChanges((tipo) => {
+        if (tipo === 'inventory') {
+            cargarProductos();
+        }
+    });
+}
+
+inicializarPOS();
